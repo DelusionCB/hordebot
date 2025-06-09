@@ -7,6 +7,6 @@ export function startsWithCommand(content: string, prefix: string): boolean {
 	return content.trim().toLowerCase().startsWith(prefix.toLowerCase());
 }
 
-export function getRandomCatGif<T>(arr: T[]): T {
+export function getRandomContent<T>(arr: T[]): T {
 	return arr[Math.floor(Math.random() * arr.length)];
 }

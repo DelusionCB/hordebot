@@ -13,7 +13,7 @@ import {
 } from 'discord.js';
 import {gachiMuchi, labels, messages, orangeCats} from "./messages";
 import {commandChannel, eventChannel, permittedAdmins, permittedChannels, Users} from "./permissions";
-import {getRandomCatGif, includesCommand, startsWithCommand} from "./functions";
+import {getRandomContent, includesCommand, startsWithCommand} from "./functions";
 
 const client = new Client({
 	intents: [
@@ -229,8 +229,8 @@ client.on('messageCreate', async (message) => {
 		}
 		if (includesCommand(message.content, 'gay') || includesCommand(message.content, 'gae')) {
 			if (Math.random() < 0.2) {
-				const cat = getRandomCatGif(gachiMuchi)
-				await message.reply(cat);
+				const gachi = getRandomContent(gachiMuchi)
+				await message.reply(gachi);
 			}
 			return;
 		}
@@ -253,7 +253,7 @@ client.on('messageCreate', async (message) => {
 			return;
 		}
 		if (message.author.id === Users.Globulina && includesCommand(message.content, 'cat')) {
-			const cat = getRandomCatGif(orangeCats)
+			const cat = getRandomContent(orangeCats)
 			await message.reply(cat);
 			return;
 		}
@@ -268,7 +268,7 @@ client.on('messageCreate', async (message) => {
 		}
 		if (message.author.id === Users.Keberion && includesCommand(message.content, 'lol')) {
 			if (Math.random() < 0.25) {
-				await message.reply(messages.jorgis);
+				await message.reply(messages.lol);
 			}
 			return;
 		}
