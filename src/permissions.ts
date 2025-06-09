@@ -1,0 +1,19 @@
+
+export const permittedChannels = ['1381342459413659768', '1344644003207057435', '1344644003207057436'];
+
+export const commandChannel = '1381342459413659768';
+
+export const eventChannel = '1344645578558013461';
+
+export const permittedAdmins = ['302956327922302986', '145691578122371081'];
+
+export enum Users {
+	Milzuzu = '610571823666429952',
+	Daeryox = '145691578122371081',
+	Finngolian = '302956327922302986',
+	Globulina = '318929461959589908',
+	Redmaur = '253061122322726912',
+	Keberion = '1116834180270145567',
+	NoPressure = '190465117467443201',
+	WhiteDevil = '226689857366392832',
+}

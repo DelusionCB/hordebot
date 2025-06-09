@@ -1,0 +1,11 @@
+# Ignore env files
+
+.env.local
+.env
+
+# Ignore node modules
+node_modules
+
+# Ignore webstorms directory
+
+.idea
