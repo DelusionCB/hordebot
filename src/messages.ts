@@ -45,13 +45,13 @@ export const orangeCats = [
 ];
 
 export const gachiMuchi = [
-	'https://www.youtube.com/watch?v=XXwPRmT41Bs',
-	'https://www.youtube.com/watch?v=gq3JxkARYRk',
-	'https://www.youtube.com/watch?v=7F8f-QZt4XA',
-	'https://www.youtube.com/watch?v=4sfHL2bHKEk',
-	'https://www.youtube.com/watch?v=0E91QCO4yRM',
-	'https://www.youtube.com/watch?v=Te23Ey3_7Sk',
-	'https://www.youtube.com/watch?v=53R-D0kIJr4',
-	'https://www.youtube.com/watch?v=NGGvqdy3yk0',
-	'https://www.youtube.com/watch?v=PMkUONWpxks',
+	'https://www.youtube.com/watch?v=gq3JxkARYRk', // Classic Gachimuchi Remaster
+	'https://www.youtube.com/watch?v=BH726JXRok0', // ♂ Leave the Gachimuchi on ♂
+	'https://www.youtube.com/watch?v=IKgINa6E2nE', // Legendary Gachimuchi Mix (1 hour)
+	'https://www.youtube.com/watch?v=cPtJVokKCnk', // 1-Hour Ecstasy Gachimuchi Music Mix
+	'https://www.youtube.com/watch?v=x3HgVoJgLGM', // Memory Reboot (♂ remix)
+	'https://www.youtube.com/watch?v=MAS-u8dqOgc', // Sea of Problems (♂ remix)
+	'https://www.youtube.com/watch?v=WnZouWGbYDc', // Deadly Verses (♂ remix)
+	'https://www.youtube.com/watch?v=WIZbHWzdKkc', // Override 300$ (♂ remix)
+	'https://www.youtube.com/watch?v=QAbhrgDf83U', // We Will Rock You (♂ version)
 ]
