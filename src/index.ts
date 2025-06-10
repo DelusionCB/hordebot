@@ -30,7 +30,6 @@ client.once('ready', () => {
 });
 
 client.on('messageCreate', async (message) => {
-	const targetChannelId = '1381342459413659768';
 	if (message.author.bot) return;
 	if (!permittedChannels.includes(message.channel.id)) return;
 	if (!message.guild) {
@@ -48,8 +47,9 @@ client.on('messageCreate', async (message) => {
 
 			if (isNaN(winnerCount) || winnerCount <= 0) {
 				await message.reply(
-					'You idiot, use it like this: `!raffle <number of raffles>, like !raffle 5`'
+					'You idiot, use it like this: `!raffle <number of raffles>, like !raffle 5 / !raffle 5 [excludedid, excludedId]`'
 				);
+				console.log('Raffle command used incorrectly')
 				return;
 			}
 
@@ -197,7 +197,8 @@ client.on('messageCreate', async (message) => {
 						],
 						components: [initialRow],
 					}).catch(async () => {
-						// fallback update
+						// Finngolian note:
+						// This is an fallback, if everything else fails
 						await interaction.update({
 							embeds: [
 								new EmbedBuilder()
