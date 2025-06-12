@@ -103,6 +103,12 @@ client.on('messageCreate', async (message) => {
 			}
 			return;
 		}
+		if (includesCommand(message.content, 'jesus') || includesCommand(message.content, 'god') || includesCommand(message.content, 'christ')) {
+			if (Math.random() < 0.3) {
+				await message.reply(messages.praise)
+			}
+			return;
+		}
 		if (includesCommand(message.content, 'gay') || includesCommand(message.content, 'gae')) {
 			if (Math.random() < 0.2) {
 				const gachi = getRandomContent(gachiMuchi)
@@ -129,7 +135,7 @@ client.on('messageCreate', async (message) => {
 			return;
 		}
 		if (message.author.id === Users.Daeryox) {
-			if (Math.random() < 0.1) {
+			if (Math.random() < 0.01) {
 				await message.react(messages.copium);
 			}
 			return;
