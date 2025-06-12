@@ -83,7 +83,7 @@ client.on('messageCreate', async (message) => {
 			const row = new ActionRowBuilder<ButtonBuilder>().addComponents(joinButton, leaveButton, startButton);
 
 			const thread = await (targetChannel as TextChannel).threads.create({
-				name: labels.raffleName + '[DEV]',
+				name: labels.raffleName + ' #' + Math.floor(Math.random() * 999 + 1),
 				type: ChannelType.PublicThread,
 			});
 
