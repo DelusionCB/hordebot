@@ -7,6 +7,7 @@ import {
 	Client,
 	GatewayIntentBits,
 	ButtonStyle,
+	ChannelType,
 	Interaction,
 	Events,
 	EmbedBuilder, TextChannel, Snowflake
@@ -25,8 +26,8 @@ const client = new Client({
 	],
 });
 
-client.once('ready', () => {
-	console.log(`Logged in as ${client.user?.tag}!`);
+client.once(Events.ClientReady, () => {
+	console.log(`Logged in as ${client.user?.tag}`);
 });
 
 client.on('messageCreate', async (message) => {
@@ -42,8 +43,9 @@ client.on('messageCreate', async (message) => {
 			includesCommand(message.content, 'raffle') && permittedAdmins.includes(message.author.id as string)
 		) {
 			const targetChannel = await message.guild.channels.fetch('1348383357083320411' as Snowflake) as TextChannel;
-			const parts = message.content.split(' ');
-			const winnerCount = parseInt(parts[1], 10);
+			const args = message.content.split(' ');
+			const winnerCount = parseInt(args[1], 10) || 1;
+			const excludedUsers = args.slice(2).map(arg => arg.replace('[', '').replace(']', '').replace(',', '').replace(/[<@!>]/g, ''));
 
 			if (isNaN(winnerCount) || winnerCount <= 0) {
 				await message.reply(
@@ -53,168 +55,41 @@ client.on('messageCreate', async (message) => {
 				return;
 			}
 
-			let excludedIds: string[] = [];
-			if (parts.length > 2) {
-				const excludePart = parts.slice(2).join(' ').trim();
-				const match = excludePart.match(/\[([^\]]+)\]/);
-				if (match) {
-					excludedIds = match[1]
-						.split(',')
-						.map(id => id.trim())
-						.filter(id => id.length > 0);
-				}
-			}
-
-			const joiners = new Map<string, string>();
-
-			const embed = new EmbedBuilder()
+			const raffleEmbed = new EmbedBuilder()
 				.setTitle('LADIES AND GENTLEMEN! WELCOME TO THIS EVENINGS MAIN EVENT!')
 				.setDescription(
 					`We're giving away 500 lucent per winner!\n\n\n` +
 					`**Winners:** ${winnerCount}\n\n\n\n` +
 					`**Participants:**\nNone\n\n\n\n` +
-					`**Excluded:**\n${excludedIds.length > 0 ? excludedIds.map(id => `<@${id}>`).join(', ') : 'None'}`
+					`**Excluded:**\n${excludedUsers.length > 0 ? excludedUsers.map(id => `<@${id}>`).join(', ') : 'None'}`
 				)
 				.setColor(0xffcc00);
 
-			const initialRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
-				new ButtonBuilder()
-					.setCustomId('join')
-					.setLabel(labels.join)
-					.setStyle(ButtonStyle.Success),
-				new ButtonBuilder()
-					.setCustomId('leave')
-					.setLabel(labels.leave)
-					.setStyle(ButtonStyle.Danger),
-				new ButtonBuilder()
-					.setCustomId('start')
-					.setLabel(labels.start)
-					.setStyle(ButtonStyle.Primary)
-			);
+			const joinButton = new ButtonBuilder()
+				.setCustomId('join')
+				.setLabel(labels.join)
+				.setStyle(ButtonStyle.Success);
 
-			const thread = await targetChannel.threads.create({
-				name: labels.raffleName,
-				reason: labels.raffleReason,
+			const leaveButton = new ButtonBuilder()
+				.setCustomId('leave')
+				.setLabel(labels.leave)
+				.setStyle(ButtonStyle.Danger);
+
+			const startButton = new ButtonBuilder()
+				.setCustomId('start')
+				.setLabel(labels.start)
+				.setStyle(ButtonStyle.Primary);
+
+			const row = new ActionRowBuilder<ButtonBuilder>().addComponents(joinButton, leaveButton, startButton);
+
+			const thread = await (targetChannel as TextChannel).threads.create({
+				name: labels.raffleName + '[DEV]',
+				type: ChannelType.PublicThread,
 			});
 
 			const raffleMessage = await thread.send({
-				embeds: [embed],
-				components: [initialRow],
-			});
-
-			let started = false;
-
-			const collector = raffleMessage.createMessageComponentCollector({});
-
-			collector.on('collect', async interaction => {
-				if (interaction.user.bot) {
-					await interaction.deferUpdate();
-					return;
-				}
-
-				const isAdmin = permittedAdmins.includes(interaction.user.id);
-
-				if (interaction.customId === 'join') {
-					if (!excludedIds.includes(interaction.user.id)) {
-						joiners.set(interaction.user.id, interaction.user.username);
-					}
-					await interaction.deferUpdate();
-				} else if (interaction.customId === 'leave') {
-					joiners.delete(interaction.user.id);
-					await interaction.deferUpdate();
-				} else if (interaction.customId === 'start') {
-					if (!isAdmin) {
-						await interaction.deferUpdate();
-						return;
-					}
-					started = true;
-
-					const finalJoinersArray = Array.from(joiners.keys());
-					const finalJoiners = finalJoinersArray.map(id => `<@${id}>`).join(', ');
-
-					let winners: string[] = [];
-					let available = finalJoinersArray.filter(id => !excludedIds.includes(id));
-					const maxWinners = Math.min(winnerCount, available.length);
-
-					for (let i = 0; i < maxWinners; i++) {
-						const winnerIndex = Math.floor(Math.random() * available.length);
-						const winnerId = available.splice(winnerIndex, 1)[0];
-						winners.push(`<@${winnerId}>`);
-					}
-
-					await interaction.update({
-						embeds: [
-							new EmbedBuilder()
-								.setTitle('Liftoff! Countdown has started!')
-								.setDescription('Selecting winners in **30 seconds**...\n\n\n' +
-									`We're giving away 500 lucent per winner!\n\n\n\n` +
-									`**Winners to draw:** ${winnerCount}\n\n\n\n` +
-									`**Participants:**\n${finalJoiners || 'None'}\n\n\n\n` +
-									`**Excluded:**\n${excludedIds.length > 0 ? excludedIds.map(id => `<@${id}>`).join(', ') : 'None'}`)
-								.setColor(0x3498db),
-						],
-						components: [],
-					});
-
-					setTimeout(async () => {
-						await raffleMessage.edit({
-							embeds: [
-								new EmbedBuilder()
-									.setTitle('Aaaand it has ended! Congratulations to all the lucky ones!')
-									.setDescription(
-										`500 lucent per winner!\n\n\n` +
-										`**Winners (${winners.length}):**\n${winners.join(', ') || 'None'}\n\n\n\n` +
-										`**Participants:**\n${finalJoiners || 'None'}\n\n\n\n` +
-										`**Excluded:**\n${excludedIds.length > 0 ? excludedIds.map(id => `<@${id}>`).join(', ') : 'None'}`
-									)
-									.setColor(0x00AE86),
-							],
-							components: [],
-						});
-
-						collector.stop();
-					}, 30000);
-
-					collector.stop();
-				}
-
-				if (!started && (interaction.customId === 'join' || interaction.customId === 'leave')) {
-					const joinerList = joiners.size > 0
-						? Array.from(joiners.keys()).map(id => `<@${id}>`).join(', ')
-						: 'None';
-
-					await interaction.editReply?.({
-						embeds: [
-							new EmbedBuilder()
-								.setTitle('LADIES AND GENTLEMEN! WELCOME TO THIS EVENINGS MAIN EVENT!')
-								.setDescription(
-									`We're giving away 500 lucent per winner!\n\n\n` +
-									`**Winners:** ${winnerCount}\n\n\n\n` +
-									`**Participants:**\n${joinerList}\n\n\n\n` +
-									`**Excluded:**\n${excludedIds.length > 0 ? excludedIds.map(id => `<@${id}>`).join(', ') : 'None'}`
-								)
-								.setColor(0xffcc00),
-						],
-						components: [initialRow],
-					}).catch(async () => {
-						// Finngolian note:
-						// This is an fallback, if everything else fails
-						await interaction.update({
-							embeds: [
-								new EmbedBuilder()
-									.setTitle('We are ready to start the raffle!')
-									.setDescription(
-										`We're giving away 500 lucent per winner!\n\n\n` +
-										`**Winners:** ${winnerCount}\n\n\n\n` +
-										`**Joiners:**\n${joinerList}\n\n\n\n` +
-										`**Excluded:**\n${excludedIds.length > 0 ? excludedIds.map(id => `<@${id}>`).join(', ') : 'None'}`
-									)
-									.setColor(0xffcc00),
-							],
-							components: [initialRow],
-						});
-					});
-				}
+				embeds: [raffleEmbed],
+				components: [row],
 			});
 		}
 		if (includesCommand(message.content, 'ping') && (message.author.id === Users.Daeryox || message.author.id === Users.Finngolian)) {
@@ -235,15 +110,21 @@ client.on('messageCreate', async (message) => {
 			}
 			return;
 		}
-		if (message.author.id === Users.Milzuzu && includesCommand(message.content, '??')) {
-			if (Math.random() < 0.25) {
-				await message.reply(messages.throat)
+		if (message.author.id === Users.Milzuzu) {
+			if (includesCommand(message.content, '??')) {
+				if (Math.random() < 0.25) {
+					await message.reply(messages.throat)
+				}
+				return;
 			}
-			return;
-		}
-		if (message.author.id === Users.Milzuzu && includesCommand(message.content, 'fhat')) {
-			if (Math.random() < 0.25) {
-				await message.reply(messages.anthem(Users.Milzuzu))
+			if (includesCommand(message.content, 'fhat')) {
+				if (Math.random() < 0.25) {
+					await message.reply(messages.anthem(Users.Milzuzu))
+				}
+				return;
+			}
+			if (Math.random() < 0.0001) {
+				await message.reply(messages.legendary)
 			}
 			return;
 		}
@@ -286,12 +167,95 @@ client.on('messageCreate', async (message) => {
 				}
 				return;
 			}
-			if (Math.random() < 0.02) {
+			if (Math.random() < 0.002) {
 				await message.reply(messages.god)
 			}
 			return;
 		}
 	}
+});
+
+client.on(Events.InteractionCreate, async (interaction: Interaction) => {
+	if (!interaction.isButton()) return;
+	if (interaction.user.bot) return;
+
+	const thread = interaction.channel;
+	if (!thread?.isThread()) return;
+
+	const message = interaction.message;
+	if (!message.editable) return;
+
+	const embed = message.embeds[0];
+	if (!embed) return;
+
+	const embedDesc = embed.description ?? '';
+
+	const participantsLine = embedDesc.match(/\*\*Participants:\*\*\n(.+?)\n\n\n\n/)?.[1] ?? '';
+	const excludedLine = embedDesc.match(/\*\*Excluded:\*\*\n(.+?)$/)?.[1] ?? '';
+	const winnerCountMatch = embedDesc.match(/\*\*Winners:\*\* (\d+)/);
+	const winnerCount = parseInt(winnerCountMatch?.[1] ?? '1', 10);
+
+	const participantIds = [...participantsLine.matchAll(/<@(\d+)>/g)].map(m => m[1]);
+	const excludedIds = [...excludedLine.matchAll(/<@(\d+)>/g)].map(m => m[1]);
+
+	const joiners = new Set(participantIds);
+	const isAdmin = permittedAdmins.includes(interaction.user.id);
+
+	if (interaction.customId === 'join') {
+		if (!excludedIds.includes(interaction.user.id)) {
+			joiners.add(interaction.user.id);
+		}
+	} else if (interaction.customId === 'leave') {
+		joiners.delete(interaction.user.id);
+	} else if (interaction.customId === 'start' && isAdmin) {
+			const available = [...joiners].filter(id => !excludedIds.includes(id));
+			const maxWinners = Math.min(winnerCount, available.length);
+			const winners: string[] = [];
+
+			for (let i = 0; i < maxWinners; i++) {
+				const index = Math.floor(Math.random() * available.length);
+				const winner = available.splice(index, 1)[0];
+				winners.push(`<@${winner}>`);
+			}
+
+			await interaction.update({
+				components: [],
+				embeds: [
+					EmbedBuilder.from(embed).setFooter({ text: 'Started...' }),
+				],
+			});
+
+		setTimeout(async () => {
+			await thread.send({
+				embeds: [
+					new EmbedBuilder()
+						.setTitle('Aaaand it has ended! Congratulations to all the lucky ones!')
+						.setDescription(
+							`**Winners (${winners.length}):**\n${winners.join(', ') || 'None'}\n\n\n\n`
+						)
+						.setColor(0x00AE86),
+				],
+				components: [],
+			});
+		}, 10000);
+
+			return;
+		}
+
+	await interaction.update({
+		embeds: [
+			new EmbedBuilder()
+				.setTitle('LADIES AND GENTLEMEN! WELCOME TO THIS EVENINGS MAIN EVENT!')
+				.setDescription(
+					`We're giving away 500 lucent per winner!\n\n\n` +
+					`**Winners:** ${winnerCount}\n\n\n\n` +
+					`**Participants:**\n${[...joiners].map(id => `<@${id}>`).join(', ') || 'None'}\n\n\n\n` +
+					`**Excluded:**\n${excludedIds.map(id => `<@${id}>`).join(', ') || 'None\n\n'}`
+				)
+				.setColor(0xffcc00),
+		],
+		components: interaction.message.components,
+	});
 });
 
 const token = process.env.MY_SECRET_DISCORD_KEY;

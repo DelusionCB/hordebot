@@ -10,6 +10,7 @@ export const messages = {
 	jorgis: `https://www.youtube.com/watch?v=3MmZul0Aj0E`,
 	lol: `https://tenor.com/view/laugh-out-loud-laugh-ridiculous-hilarious-lolz-gif-17376550074772904877`,
 	pong: 'Pong!',
+	legendary: `Horniest and the most lustful woman on the planet earth. From Finngolia obviously`,
 };
 
 export const labels = {
