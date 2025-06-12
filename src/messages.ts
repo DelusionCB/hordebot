@@ -9,7 +9,7 @@ export const messages = {
 	rick: `https://www.youtube.com/watch?v=dQw4w9WgXcQ`,
 	jorgis: `https://www.youtube.com/watch?v=3MmZul0Aj0E`,
 	lol: `https://tenor.com/view/laugh-out-loud-laugh-ridiculous-hilarious-lolz-gif-17376550074772904877`,
-	pong: 'Pong!',
+	pong: (ping: number) => `🏓 Pong! Latency is ${ping}ms.`,
 	legendary: `Horniest and the most lustful woman on the planet earth. From Finngolia obviously`,
 	praise: `Praise the lord!\n\n https://www.youtube.com/watch?v=Kbj2Zss-5GY`,
 };

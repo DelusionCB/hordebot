@@ -93,7 +93,8 @@ client.on('messageCreate', async (message) => {
 			});
 		}
 		if (includesCommand(message.content, 'ping') && (message.author.id === Users.Daeryox || message.author.id === Users.Finngolian)) {
-			await message.reply(messages.pong)
+			const ping = Math.round(message.client.ws.ping);
+			await message.reply(messages.pong(ping));
 			return;
 		}
 	} else {
