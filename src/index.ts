@@ -12,7 +12,7 @@ import {
 	Events,
 	EmbedBuilder, TextChannel, Snowflake
 } from 'discord.js';
-import {gachiMuchi, labels, messages, orangeCats} from "./messages";
+import {gachiMuchi, hoarderMessages, labels, messages, orangeCats, superiorMessages} from "./messages";
 import {commandChannel, eventChannel, permittedAdmins, permittedChannels, Users} from "./permissions";
 import {getRandomContent, includesCommand, startsWithCommand} from "./functions";
 
@@ -98,6 +98,32 @@ client.on('messageCreate', async (message) => {
 			return;
 		}
 	} else {
+		if (message.author.id === Users.Finngolian) {
+			const parts = message.content.trim().split(' ');
+			const command = parts[0].toLowerCase();
+			const targetUserId = parts[1]?.replace(/[<@!>]/g, '');
+
+			if (!targetUserId) {
+				await message.channel.send('Learn to use your own commands fucking idiot');
+				return;
+			}
+
+			if (includesCommand(command, '!horde')) {
+				for (const msg of superiorMessages(targetUserId, Users)) {
+					await message.channel.send(msg);
+					await new Promise(res => setTimeout(res, 4500));
+				}
+				return;
+			}
+
+			if (includesCommand(command, '!hoarder')) {
+				for (const msg of hoarderMessages(targetUserId)) {
+					await message.channel.send(msg);
+					await new Promise(res => setTimeout(res, 4500));
+				}
+				return;
+			}
+		}
 		if (includesCommand(message.content, 'muscle')) {
 			if (Math.random() < 0.3) {
 				await message.reply(messages.muscle)
@@ -183,6 +209,7 @@ client.on('messageCreate', async (message) => {
 });
 
 client.on(Events.InteractionCreate, async (interaction: Interaction) => {
+	console.log('Do we log interaction')
 	if (!interaction.isButton()) return;
 	if (interaction.user.bot) return;
 
@@ -207,7 +234,8 @@ client.on(Events.InteractionCreate, async (interaction: Interaction) => {
 
 	const joiners = new Set(participantIds);
 	const isAdmin = permittedAdmins.includes(interaction.user.id);
-
+	console.log(isAdmin, 'is user admin')
+	console.log(interaction.customId, 'what is this')
 	if (interaction.customId === 'join') {
 		if (!excludedIds.includes(interaction.user.id)) {
 			joiners.add(interaction.user.id);

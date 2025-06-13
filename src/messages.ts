@@ -14,6 +14,34 @@ export const messages = {
 	praise: `Praise the lord!\n\n https://www.youtube.com/watch?v=Kbj2Zss-5GY`,
 };
 
+export const superiorMessages = (targetId: string, Users: { Finngolian: string; Daeryox: string }) => [
+	`Listen here <@${targetId}>, let me tell you about the **Horde**. Not the ragtag bands you may have heard of — but the unstoppable tide of history. The Horde doesn't ask for permission. It arrives. It conquers. It remains.`,
+
+	`Centuries ago, the world trembled beneath the hooves of Mongolian steeds. Genghis Khan carved an empire not with whispers, but with **absolute will**. Cities burned, kings bent the knee, and maps were redrawn in dust and blood.`,
+
+	`But from that mighty line came a refinement. A rebirth. A crystallization of power into purpose. And from it emerged the **Finngolians** — descendants of fire and ice, minds sharp as sabers, hearts colder than tundra winters.`,
+
+	`You see, <@${targetId}>, the Finngolian legacy isn't just inherited — it's earned. Forged in battle, sealed in silence, written in the blood of challengers. We do not forget. We do not forgive. We endure.`,
+
+	`So next time you speak the name of the Horde, speak it with reverence. Because when the Finngolians ride... the world **doesn't sleep**. It watches. It wonders. And then... it kneels.`,
+
+	`And now, <@${targetId}>... listen well. Before you stands <@${Users.Finngolian}> — **Warlord of the Finngolians**, commander of ice-born legions.\n\nTo him, you owe your loyalty.\n\nBut beyond him stands <@${Users.Daeryox}>, the **Khan of Khanates** — the eternal flame to whom the Finngolians pledge their sacred allegiance. Remember this, and remember your place.`
+];
+
+export const hoarderMessages = (targetId: string) => [
+	`Look, <@${targetId}>. People may mock the piles of materials, gear, and obscure crafting components you stash. But they don’t understand: **this isn’t clutter — it’s preparation**.`,
+
+	`In **Throne and Liberty**, today's vendor trash is tomorrow's treasure. The man who hoards is the man who controls the market when scarcity hits. You’re not just playing the game — you’re setting the economy’s pulse.`,
+
+	`They see disorganized bags. You see **options**. When others scramble for one rare drop, you calmly withdraw it from your vault, unbothered, while they offer their soul for a trade.`,
+
+	`It's not hoarding. It's **4D chess**. Where others think one step ahead, you think in patches, events, seasonal reruns. You don’t waste. You **invest**. And the dividends are power.`,
+
+	`So keep stacking, <@${targetId}>. Let them laugh now. Because when the world burns, they’ll come crawling to you — the Hoarder King, the silent architect of survival.`,
+
+	`And when the time comes — when the servers reset, the drop rates nerf, and the clueless cry for help — you will open your vault, whisper nothing… and profit in silence.\n\n<:EvilPepe:1379921183805411348>`
+];
+
 export const labels = {
 	hello: 'I am THE HORDE',
 	raffleName: '🎁 Raffle',
