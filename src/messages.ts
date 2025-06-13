@@ -12,6 +12,7 @@ export const messages = {
 	pong: (ping: number) => `🏓 Pong! Latency is ${ping}ms.`,
 	legendary: `Horniest and the most lustful woman on the planet earth. From Finngolia obviously`,
 	praise: `Praise the lord!\n\n https://www.youtube.com/watch?v=Kbj2Zss-5GY`,
+	twat: `Fuck off twat, roll elsewhere`,
 };
 
 export const superiorMessages = (targetId: string, Users: { Finngolian: string; Daeryox: string }) => [
@@ -41,6 +42,16 @@ export const hoarderMessages = (targetId: string) => [
 
 	`And when the time comes — when the servers reset, the drop rates nerf, and the clueless cry for help — you will open your vault, whisper nothing… and profit in silence.\n\n<:EvilPepe:1379921183805411348>`
 ];
+
+export const rollMessages = {
+	zero: "You rolled a **0**. That's... impressively bad. You might be cursed.",
+	low: (roll: number) => `You rolled a **${roll}**. Hey, at least it's not **0**. Small wins, right?`,
+	bad: (roll: number) => `You rolled a **${roll}**. Not the worst, but let’s not pretend this is good.`,
+	mid: (roll: number) => `You rolled a **${roll}**. You trying? Feels like you're not even trying.`,
+	high: (roll: number) => `You rolled a **${roll}**. Alright alright, we’re creeping up. Getting spicy.`,
+	top: (roll: number) => `You rolled a **${roll}**. God damn, this is top-tier energy right here.`,
+	legend: `You rolled a **100**. Actual legend. Go buy a lottery ticket before your luck resets.`,
+};
 
 export const labels = {
 	hello: 'I am THE HORDE',

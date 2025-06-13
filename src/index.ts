@@ -12,7 +12,7 @@ import {
 	Events,
 	EmbedBuilder, TextChannel, Snowflake
 } from 'discord.js';
-import {gachiMuchi, hoarderMessages, labels, messages, orangeCats, superiorMessages} from "./messages";
+import {gachiMuchi, hoarderMessages, labels, messages, orangeCats, rollMessages, superiorMessages} from "./messages";
 import {commandChannel, eventChannel, permittedAdmins, permittedChannels, Users} from "./permissions";
 import {getRandomContent, includesCommand, startsWithCommand} from "./functions";
 
@@ -98,6 +98,36 @@ client.on('messageCreate', async (message) => {
 			return;
 		}
 	} else {
+		if (startsWithCommand(message.content, '!') && includesCommand(message.content, 'roll')) {
+			const coinFlip = Math.random() < 0.5;
+
+			if (coinFlip) {
+				const roll = Math.floor(Math.random() * 101);
+
+				let smugMessage = '';
+
+				if (roll === 0) {
+					smugMessage = rollMessages.zero;
+				} else if (roll <= 10) {
+					smugMessage = rollMessages.low(roll);
+				} else if (roll <= 30) {
+					smugMessage = rollMessages.bad(roll);
+				} else if (roll <= 60) {
+					smugMessage = rollMessages.mid(roll);
+				} else if (roll <= 90) {
+					smugMessage = rollMessages.high(roll);
+				} else if (roll <= 99) {
+					smugMessage = rollMessages.top(roll);
+				} else {
+					smugMessage = rollMessages.legend;
+				}
+
+				await message.reply(smugMessage);
+			} else {
+				await message.reply(messages.twat);
+			}
+			return;
+		}
 		if (message.author.id === Users.Finngolian) {
 			if (startsWithCommand(message.content, '!')) {
 				const parts = message.content.trim().split(' ');
