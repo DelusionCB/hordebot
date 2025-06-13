@@ -99,29 +99,31 @@ client.on('messageCreate', async (message) => {
 		}
 	} else {
 		if (message.author.id === Users.Finngolian) {
-			const parts = message.content.trim().split(' ');
-			const command = parts[0].toLowerCase();
-			const targetUserId = parts[1]?.replace(/[<@!>]/g, '');
+			if (startsWithCommand(message.content, '!')) {
+				const parts = message.content.trim().split(' ');
+				const command = parts[0].toLowerCase();
+				const targetUserId = parts[1]?.replace(/[<@!>]/g, '');
 
-			if (!targetUserId) {
-				await message.channel.send('Learn to use your own commands fucking idiot');
-				return;
-			}
-
-			if (includesCommand(command, '!horde')) {
-				for (const msg of superiorMessages(targetUserId, Users)) {
-					await message.channel.send(msg);
-					await new Promise(res => setTimeout(res, 4500));
+				if (!targetUserId) {
+					await message.channel.send('Learn to use your own commands fucking idiot');
+					return;
 				}
-				return;
-			}
 
-			if (includesCommand(command, '!hoarder')) {
-				for (const msg of hoarderMessages(targetUserId)) {
-					await message.channel.send(msg);
-					await new Promise(res => setTimeout(res, 4500));
+				if (includesCommand(command, 'horde')) {
+					for (const msg of superiorMessages(targetUserId, Users)) {
+						await message.channel.send(msg);
+						await new Promise(res => setTimeout(res, 2500));
+					}
+					return;
 				}
-				return;
+
+				if (includesCommand(command, 'hoarder')) {
+					for (const msg of hoarderMessages(targetUserId)) {
+						await message.channel.send(msg);
+						await new Promise(res => setTimeout(res, 2500));
+					}
+					return;
+				}
 			}
 		}
 		if (includesCommand(message.content, 'muscle')) {
