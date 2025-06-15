@@ -12,7 +12,16 @@ import {
 	Events,
 	EmbedBuilder, TextChannel, Snowflake
 } from 'discord.js';
-import {gachiMuchi, hoarderMessages, labels, messages, orangeCats, rollMessages, superiorMessages} from "./messages";
+import {
+	gachiMuchi,
+	hoarderMessages,
+	khanMessages,
+	labels,
+	messages,
+	orangeCats,
+	rollMessages,
+	superiorMessages
+} from "./messages";
 import {commandChannel, eventChannel, permittedAdmins, permittedChannels, Users} from "./permissions";
 import {getRandomContent, includesCommand, startsWithCommand} from "./functions";
 
@@ -194,8 +203,19 @@ client.on('messageCreate', async (message) => {
 			return;
 		}
 		if (message.author.id === Users.Daeryox) {
-			if (Math.random() < 0.01) {
-				await message.react(messages.copium);
+			if (startsWithCommand(message.content, '!')) {
+				if (includesCommand(message.content, 'khan')) {
+					for (const msg of khanMessages) {
+						await message.channel.send(msg);
+						await new Promise(res => setTimeout(res, 1500));
+					}
+					return;
+				}
+			}
+			else {
+				if (Math.random() < 0.01) {
+					await message.react(messages.copium);
+				}
 			}
 			return;
 		}

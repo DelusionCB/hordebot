@@ -29,6 +29,14 @@ export const superiorMessages = (targetId: string, Users: { Finngolian: string; 
 	`And now, <@${targetId}>... listen well. Before you stands <@${Users.Finngolian}> — **Warlord of the Finngolians**, commander of ice-born legions.\n\nTo him, you owe your loyalty.\n\nBut beyond him stands <@${Users.Daeryox}>, the **Khan of Khanates** — the eternal flame to whom the Finngolians pledge their sacred allegiance. Remember this, and remember your place.`
 ];
 
+export const khanMessages = [
+	"I am the Khan, Khan of Khanates! My shadow stretches across continents, my name whispered with reverence and fear.",
+	"My banners do not march — they thunder. I do not conquer lands; I reshape them in my image.",
+	"Where others see sand and stone, I see thrones to be claimed and fools to be buried beneath them.",
+	"I have outlived kings and outmaneuvered prophets. Destiny does not guide me — it kneels.",
+	"I am not heir to an empire. I am the storm that builds it. I am Khan."
+];
+
 export const hoarderMessages = (targetId: string) => [
 	`Look, <@${targetId}>. People may mock the piles of materials, gear, and obscure crafting components you stash. But they don’t understand: **this isn’t clutter — it’s preparation**.`,
 
